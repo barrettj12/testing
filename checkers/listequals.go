@@ -100,7 +100,7 @@ func generateDiff(obtained, expected reflect.Value) string {
 	for i > 0 && j > 0 {
 		if lenLCS[i][j] == lenLCS[i-1][j-1] {
 			// Element changed at this index
-			diffs = append(diffs, elementChanged{j, expected.Index(j - 1), obtained.Index(i - 1)})
+			diffs = append(diffs, elementChanged{j - 1, expected.Index(j - 1), obtained.Index(i - 1)})
 			i -= 1
 			j -= 1
 
@@ -111,7 +111,7 @@ func generateDiff(obtained, expected reflect.Value) string {
 
 		} else if lenLCS[i][j] == lenLCS[i][j-1] {
 			// Element missing at this index
-			diffs = append(diffs, elementRemoved{j, expected.Index(j - 1)})
+			diffs = append(diffs, elementRemoved{j - 1, expected.Index(j - 1)})
 			j -= 1
 
 		} else {
