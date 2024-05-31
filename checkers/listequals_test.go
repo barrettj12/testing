@@ -13,8 +13,9 @@ type listEqualsSuite struct{}
 var _ = gc.Suite(&listEqualsSuite{})
 
 func (s *listEqualsSuite) TestFoo(c *gc.C) {
-	jc.GenerateDiff(
+	c.Check(
 		[]rune("ABDEZGHILJK"),
+		jc.ListEquals,
 		[]rune("ABCDEFGHIJK"),
 	)
 }
