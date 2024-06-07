@@ -37,8 +37,14 @@ func (l *listEqualsChecker) Check(params []interface{}, names []string) (result 
 		return false, fmt.Sprintf("obtained value is not a slice")
 	}
 
-	// TODO: check that obtained and expected have of the same element type,
-	//  and this element type is comparable.
+	// Check that the element types are comparable.
+	if !vExp.Type().Elem().Comparable() {
+		return false, fmt.Sprintf("expected element type is not comparable")
+	}
+
+	if !vObt.Type().Elem().Comparable() {
+		return false, fmt.Sprintf("obtained element type is not comparable")
+	}
 
 	// The approach here is to find a longest-common subsequence using dynamic
 	// programming, and use this to generate the diff. This algorithm runs in
@@ -120,13 +126,22 @@ func generateDiff(obtained, expected reflect.Value) string {
 			j -= 1
 		}
 	}
+	for i > 0 {
+		// Extra elements have been added at the start
+		diffs = append(diffs, elementAdded{0, obtained.Index(i - 1)})
+		i -= 1
+	}
+	for j > 0 {
+		// Elements are missing at the start
+		diffs = append(diffs, elementRemoved{j - 1, expected.Index(j - 1)})
+		j -= 1
+	}
 
 	// Convert diffs array into human-readable error
 	description := "difference:"
 	for k := len(diffs) - 1; k >= 0; k-- {
 		description += "\n    - " + diffs[k].String()
 	}
-	fmt.Println(description)
 	return description
 }
 
