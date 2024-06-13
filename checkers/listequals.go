@@ -161,7 +161,7 @@ type elementAdded struct {
 }
 
 func (d elementAdded) String() string {
-	return fmt.Sprintf("at index %d: unexpected element %v", d.index, d.element)
+	return fmt.Sprintf("at index %d: unexpected element %#v", d.index, d.element)
 }
 
 type elementChanged struct {
@@ -171,7 +171,7 @@ type elementChanged struct {
 }
 
 func (d elementChanged) String() string {
-	return fmt.Sprintf("at index %d: obtained element %v, expected %v", d.index, d.changed, d.original)
+	return fmt.Sprintf("at index %d: obtained element %#v, expected %#v", d.index, d.changed, d.original)
 }
 
 type elementRemoved struct {
@@ -180,5 +180,5 @@ type elementRemoved struct {
 }
 
 func (d elementRemoved) String() string {
-	return fmt.Sprintf("at index %d: missing element %v", d.index, d.element)
+	return fmt.Sprintf("at index %d: missing element %#v", d.index, d.element)
 }

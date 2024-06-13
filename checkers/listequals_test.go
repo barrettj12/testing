@@ -49,7 +49,7 @@ var testCases = []testCase{{
 	list2:       []any{"A", "B", "C", 321},
 	equal:       false,
 	error: `difference:
-    - at index 3: obtained element DEF, expected 321`,
+    - at index 3: obtained element "DEF", expected 321`,
 }, {
 	description: "incomparable element type",
 	list1:       [][]string{{"A"}},
@@ -60,7 +60,7 @@ var testCases = []testCase{{
 	list1:       []any{"A"},
 	list2:       []any{[]string{"A"}},
 	error: `difference:
-    - at index 0: obtained element A, expected \[A\]`,
+    - at index 0: obtained element "A", expected \[\]string\{"A"\}`,
 }, {
 	description: "elements missing at start",
 	list1:       []int{5, 6},
@@ -112,10 +112,10 @@ var testCases = []testCase{{
 	list2:       []string{"A", "B", "C", "D", "E", "F", "G", "H", "I"},
 	equal:       false,
 	error: `difference:
-    - at index 1: obtained element Z, expected B
-    - at index 3: obtained element Y, expected D
-    - at index 5: obtained element X, expected F
-    - at index 7: obtained element W, expected H`,
+    - at index 1: obtained element "Z", expected "B"
+    - at index 3: obtained element "Y", expected "D"
+    - at index 5: obtained element "X", expected "F"
+    - at index 7: obtained element "W", expected "H"`,
 }}
 
 func init() {
