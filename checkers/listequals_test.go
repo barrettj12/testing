@@ -42,35 +42,25 @@ var testCases = []testCase{{
 	description: "same contents but different element type",
 	list1:       []string{"A", "B", "C", "DEF"},
 	list2:       []any{"A", "B", "C", "DEF"},
-	equal:       true,
+	error:       "element types are not equal",
 }, {
 	description: "different type in last position",
-	list1:       []string{"A", "B", "C", "DEF"},
+	list1:       []any{"A", "B", "C", "DEF"},
 	list2:       []any{"A", "B", "C", 321},
 	equal:       false,
 	error: `difference:
-    - at index 3: obtained element 321, expected DEF`,
+    - at index 3: obtained element DEF, expected 321`,
 }, {
-	description: "both element types not comparable",
+	description: "incomparable element type",
 	list1:       [][]string{{"A"}},
-	list2:       []func(){func() {}},
-	error:       "expected element type is not comparable",
-}, {
-	description: "obtained element type not comparable",
-	list1:       []map[string]string{{"A": "B"}},
-	list2:       []string{"A"},
-	error:       "obtained element type is not comparable",
-}, {
-	description: "expected element type not comparable",
-	list1:       []string{"A"},
 	list2:       [][]string{{"A"}},
-	error:       "expected element type is not comparable",
+	error:       "element type is not comparable",
 }, {
 	description: "incomparable values are fine",
-	list1:       []string{"A"},
+	list1:       []any{"A"},
 	list2:       []any{[]string{"A"}},
 	error: `difference:
-    - at index 0: obtained element \[A\], expected A`,
+    - at index 0: obtained element A, expected \[A\]`,
 }, {
 	description: "elements missing at start",
 	list1:       []int{5, 6},
@@ -103,10 +93,30 @@ var testCases = []testCase{{
 	error: `difference:
     - at index 4: unexpected element 7
     - at index 4: unexpected element 8`,
-},
-
-// TODO: add some expected tests cases for general differences
-}
+}, {
+	description: "basic test",
+	list1:       []int{0, 2, 62, 4, 43, 5, 7, 104, 9, 56, 10},
+	list2:       []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11},
+	equal:       false,
+	error: `difference:
+    - at index 1: missing element 1
+    - at index 3: obtained element 62, expected 3
+    - at index 5: unexpected element 43
+    - at index 6: missing element 6
+    - at index 8: obtained element 104, expected 8
+    - at index 10: unexpected element 56
+    - at index 11: missing element 11`,
+}, {
+	description: "replaced elements",
+	list1:       []string{"A", "Z", "C", "Y", "E", "X", "G", "W", "I"},
+	list2:       []string{"A", "B", "C", "D", "E", "F", "G", "H", "I"},
+	equal:       false,
+	error: `difference:
+    - at index 1: obtained element Z, expected B
+    - at index 3: obtained element Y, expected D
+    - at index 5: obtained element X, expected F
+    - at index 7: obtained element W, expected H`,
+}}
 
 func init() {
 	// Add a test case with two super long but equal arrays. In this case, we

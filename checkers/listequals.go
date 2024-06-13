@@ -37,13 +37,17 @@ func (l *listEqualsChecker) Check(params []interface{}, names []string) (result 
 		return false, fmt.Sprintf("obtained value is not a slice")
 	}
 
-	// Check that the element types are comparable.
-	if !vExp.Type().Elem().Comparable() {
-		return false, fmt.Sprintf("expected element type is not comparable")
+	// Check that element types are the same
+	expElemType := vExp.Type().Elem()
+	obtElemType := vObt.Type().Elem()
+
+	if expElemType != obtElemType {
+		return false, fmt.Sprintf("element types are not equal")
 	}
 
-	if !vObt.Type().Elem().Comparable() {
-		return false, fmt.Sprintf("obtained element type is not comparable")
+	// Check that the element type is comparable.
+	if !expElemType.Comparable() {
+		return false, fmt.Sprintf("element type is not comparable")
 	}
 
 	// The approach here is to find a longest-common subsequence using dynamic
@@ -167,7 +171,7 @@ type elementChanged struct {
 }
 
 func (d elementChanged) String() string {
-	return fmt.Sprintf("at index %d: obtained element %v, expected %v", d.index, d.original, d.changed)
+	return fmt.Sprintf("at index %d: obtained element %v, expected %v", d.index, d.changed, d.original)
 }
 
 type elementRemoved struct {
